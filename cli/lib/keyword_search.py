@@ -1,5 +1,6 @@
 from .search_utils import DEFAULT_SEARCH_LIMIT, load_movies, load_stopwords
 from string import punctuation
+from nltk.stem import PorterStemmer
 
 
 def search_command(query: str, limit: int = DEFAULT_SEARCH_LIMIT) -> list[dict]:
@@ -38,7 +39,9 @@ def tokenize_text(text: str) -> list[str]:
             valid_tokens.append(token)
     stop_words = load_stopwords()
     filtered_words = []
+    stemmer = PorterStemmer()
     for word in valid_tokens:
         if word not in stop_words:
-            filtered_words.append(word)
+            stemmed_word = stemmer.stem(word)
+            filtered_words.append(stemmed_word)
     return filtered_words
