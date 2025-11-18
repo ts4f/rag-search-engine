@@ -1,5 +1,7 @@
 import os
+from typing import Optional
 
+from .query_enhancement import enhance_query
 from .search_utils import (
     DEFAULT_ALPHA,
     DEFAULT_SEARCH_LIMIT,
@@ -38,7 +40,7 @@ class HybridSearch:
         bm25_results = self._bm25_search(query, limit * 500)
         semantic_results = self.semantic_search.search_chunks(query, limit * 500)
 
-        combined = reciprocal_rank_fusion(bm25_results, semantic_results)
+        combined = reciprocal_rank_fusion(bm25_results, semantic_results, k)
         return combined[:limit]
 
 
@@ -200,18 +202,25 @@ def weighted_search_command(
 def rrf_search_command(
     query: str,
     k: int = RRF_K,
+    enhance: Optional[str] = None,
     limit: int = DEFAULT_SEARCH_LIMIT,
 ) -> dict:
     movies = load_movies()
     searcher = HybridSearch(movies)
 
     original_query = query
+    enhanced_query = None
+    if enhance:
+        enhanced_query = enhance_query(query, method=enhance)
+        query = enhanced_query
 
     search_limit = limit
     results = searcher.rrf_search(query, k, search_limit)
 
     return {
         "original_query": original_query,
+        "enhanced_query": enhanced_query,
+        "enhance_method": enhance,
         "query": query,
         "k": k,
         "results": results,
