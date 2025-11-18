@@ -2,20 +2,20 @@
 
 import argparse
 
-from lib.search_utils import BM25_B, BM25_K1
-from lib.keyword_search import (
-    bm25_idf_command,
-    bm25_tf_command,
-    bm25search_command,
-    build_command,
-    idf_command,
-    search_command,
-    tf_command,
-    tfidf_command,
-)
-
 
 def main() -> None:
+    from lib.search_utils import BM25_B, BM25_K1
+    from lib.keyword_search import (
+        bm25_idf_command,
+        bm25_tf_command,
+        bm25search_command,
+        build_command,
+        idf_command,
+        search_command,
+        tf_command,
+        tfidf_command,
+    )
+
     parser = argparse.ArgumentParser(description="Keyword Search CLI")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 

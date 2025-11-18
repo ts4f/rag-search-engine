@@ -3,20 +3,19 @@
 import argparse
 
 
-from lib.semantic_search import (
-    chunk_text,
-    embed_chunks_command,
-    embed_query_text,
-    embed_text,
-    search_chunked_command,
-    semantic_chunk_text,
-    verify_embeddings,
-    verify_model,
-    semantic_search,
-)
-
-
 def main():
+    from lib.semantic_search import (
+        chunk_text,
+        embed_chunks_command,
+        embed_query_text,
+        embed_text,
+        search_chunked_command,
+        semantic_chunk_text,
+        verify_embeddings,
+        verify_model,
+        semantic_search,
+    )
+
     parser = argparse.ArgumentParser(description="Semantic Search CLI")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
