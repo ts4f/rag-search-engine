@@ -1,8 +1,5 @@
 import argparse
-import os
 
-from dotenv import load_dotenv
-from google import genai
 
 from lib.hybrid_search import (
     normalize_scores,
@@ -50,7 +47,7 @@ def main() -> None:
     rrf_parser.add_argument(
         "--enhance",
         type=str,
-        choices=["spell"],
+        choices=["spell", "rewrite", "expand"],
         help="Query enhancement method",
     )
     rrf_parser.add_argument(
