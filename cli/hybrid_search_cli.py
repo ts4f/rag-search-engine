@@ -1,6 +1,5 @@
 import argparse
 
-
 from lib.hybrid_search import (
     normalize_scores,
     rrf_search_command,
@@ -51,6 +50,12 @@ def main() -> None:
         help="Query enhancement method",
     )
     rrf_parser.add_argument(
+        "--rerank-method",
+        type=str,
+        choices=["individual"],
+        help="Rernaking method",
+    )
+    rrf_parser.add_argument(
         "--limit", type=int, default=5, help="Number of results to return (default=5)"
     )
 
@@ -81,7 +86,9 @@ def main() -> None:
                 print(f"   {res['document'][:100]}...")
                 print()
         case "rrf-search":
-            result = rrf_search_command(args.query, args.k, args.enhance, args.limit)
+            result = rrf_search_command(
+                args.query, args.k, args.enhance, args.rerank_method, args.limit
+            )
 
             if result["enhanced_query"]:
                 print(
@@ -90,9 +97,17 @@ def main() -> None:
                 print(
                     f"Reciprocal Rank Fusion Results for '{result['query']}' (k={result['k']}):"
                 )
+            if result["reranked"]:
+                print(
+                    f"Reranking top {len(result['results'])} results using {result['rerank_method']} method...\n"
+                )
 
             for i, res in enumerate(result["results"], 1):
                 print(f"{i}. {res['title']}")
+                if "individual_score" in res:
+                    print(f"   Rerank Score: {res.get('individual_score', 0):.3f}/10")
+                if "batch_rank" in res:
+                    print(f"   Rerank Rank: {res.get('batch_rank', 0)}")
                 print(f"   RRF Score: {res.get('score', 0):.3f}")
                 metadata = res.get("metadata", {})
                 ranks = []
