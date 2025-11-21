@@ -1,5 +1,6 @@
 import argparse
 
+from lib.evaluation import llm_judge_results
 from lib.hybrid_search import (
     normalize_scores,
     rrf_search_command,
@@ -57,6 +58,9 @@ def main() -> None:
     )
     rrf_parser.add_argument(
         "--limit", type=int, default=5, help="Number of results to return (default=5)"
+    )
+    rrf_parser.add_argument(
+        "--evaluate", action="store_true", default=False, help="Enable LLM evaluation"
     )
 
     args = parser.parse_args()
@@ -123,6 +127,14 @@ def main() -> None:
                     print(f"   {', '.join(ranks)}")
                 print(f"   {res['document'][:100]}...")
                 print()
+
+            if args.evaluate:
+                print()
+                print("Evaluatin search results through LLM:")
+                judge = llm_judge_results(args.query, result["results"])
+                for i, res in enumerate(result["results"], 1):
+                    print(f"{i}. {res['title']}: {judge[i - 1]}/3")
+
         case _:
             parser.print_help()
 
