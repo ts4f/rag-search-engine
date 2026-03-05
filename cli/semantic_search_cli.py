@@ -3,7 +3,7 @@
 import argparse
 
 
-def main():
+def main() -> None:
     from lib.semantic_search import (
         chunk_text,
         embed_chunks_command,

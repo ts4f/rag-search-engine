@@ -15,7 +15,7 @@ Given the included image and text query, rewrite the text query to improve searc
 """
 
 
-def main():
+def main() -> None:
     load_dotenv()
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:

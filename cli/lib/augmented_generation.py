@@ -1,4 +1,5 @@
 import os
+from typing import Any
 
 from dotenv import load_dotenv
 from google import genai
@@ -17,7 +18,7 @@ client = genai.Client(api_key=api_key)
 model = "gemini-2.0-flash"
 
 
-def generate_answer(search_results, query, limit=5):
+def generate_answer(search_results: list[dict], query: str, limit: int = 5) -> str:
     context = ""
 
     for result in search_results[:limit]:
@@ -36,7 +37,7 @@ Provide a comprehensive answer that addresses the query:"""
     return (response.text or "").strip()
 
 
-def generate_answer_with_citations(search_results, query, limit=5):
+def generate_answer_with_citations(search_results: list[dict], query: str, limit: int = 5) -> str:
     context = ""
 
     for i, result in enumerate(search_results[:limit], start=1):
@@ -67,7 +68,7 @@ Answer:"""
     return (response.text or "").strip()
 
 
-def multi_document_summary(search_results, query, limit=5):
+def multi_document_summary(search_results: list[dict], query: str, limit: int = 5) -> str:
     docs_text = ""
     for i, result in enumerate(search_results[:limit], start=1):
         docs_text += f"Document {i}: {result['title']}; {result['document']}\n\n"
@@ -91,7 +92,7 @@ Provide a comprehensive 3–4 sentence answer that combines information from mul
     return (response.text or "").strip()
 
 
-def answer_question(search_results, question, limit=5):
+def answer_question(search_results: list[dict], question: str, limit: int = 5) -> str:
     context = ""
 
     for i, result in enumerate(search_results[:limit], start=1):
@@ -119,7 +120,7 @@ Answer:"""
     return (response.text or "").strip()
 
 
-def rag(query, limit=DEFAULT_SEARCH_LIMIT):
+def rag(query: str, limit: int = DEFAULT_SEARCH_LIMIT) -> dict[str, Any]:
     movies = load_movies()
     hybrid_search = HybridSearch(movies)
 
@@ -143,11 +144,11 @@ def rag(query, limit=DEFAULT_SEARCH_LIMIT):
     }
 
 
-def rag_command(query):
+def rag_command(query: str) -> dict[str, Any]:
     return rag(query)
 
 
-def summarize_command(query, limit=5):
+def summarize_command(query: str, limit: int = 5) -> dict[str, Any]:
     movies = load_movies()
     hybrid_search = HybridSearch(movies)
 
@@ -167,7 +168,7 @@ def summarize_command(query, limit=5):
     }
 
 
-def citations_command(query, limit=5):
+def citations_command(query: str, limit: int = 5) -> dict[str, Any]:
     movies = load_movies()
     hybrid_search = HybridSearch(movies)
 
@@ -187,7 +188,7 @@ def citations_command(query, limit=5):
     }
 
 
-def question_command(question, limit=5):
+def question_command(question: str, limit: int = 5) -> dict[str, Any]:
     movies = load_movies()
     hybrid_search = HybridSearch(movies)
 
